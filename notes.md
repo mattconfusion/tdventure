@@ -12,6 +12,7 @@
 ## Challenges
 
 USE ROUTINE: use more than one item together
+ASCII art: outputting art correctly
 
 ## Project aim
 Create a game system capable of playing text avdentures written using a single(?) JS file using a data driven approach. The system will be CLI only, text / ascii art driven.
