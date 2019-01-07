@@ -94,7 +94,9 @@ So the designer could use a scene to describe an encounter with a villain; the m
 
 ### Game routines
 
-Once the game is started, the game object will preload all the initial game status, including start inventory items, start flags, and copying the start scene in the current scene property. Then the common scene routine will begin:
+Once the game is started, the game object will preload all the initial game status, including start inventory items, start flags, and copying the start scene in the current scene property. If the start scenes are multiple, a randomized choice will start the game in of the them.
+
+Then the common scene routine will begin:
 
 1. The bottom bar will feature the scene name
 2. The description of the area will be displayed
