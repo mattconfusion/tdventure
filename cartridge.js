@@ -29,15 +29,15 @@ const Items = {}
 
 // Scenes here
 
-// Game settings here
-const GameSettings = {
+// Cartridge
+const Cartridge = {
     title: 'Development Cartridge',
     version: '0.1',
     description: ['A development cartridge file'],
     credits: ['Matteo Radice as The Main Dev'],
     startItems: [], //list of items ids
     startFlags: Flags, //dictionary of flag id and value of the flag at the start of the game
-    startScene: [], //list of the start scenes of the game (random choice if more than one)
+    startScenes: [], //list of the start scenes of the game (random choice if more than one)
     endScenes: [], // list of scenes id where the game ends, no matter in which way
     suggestedCommands: [cmds.GO_NORTH, cmds.GO_SOUTH, cmds.GO_EAST, cmds.GO_WEST], // list of commands that the game will try to autocomplete
     inventoryCommandString: null, // you can overwrite these special commands

@@ -59,8 +59,12 @@ Anatomy of a scene:
 
 The commands are strings defining which actions the player can take on the current scene.
 The "INVENTORY" and "USE" commands - which are string that can be changed - are reserved to the game system, as well as "SAVE GAME/LOAD GAME/EXIT GAME" service commands. See *Service commands* and *Game Commands* paragraphs. 
-
 Inside each command, we have different scenarios.
+
+Two special flags are used in case the scene involves using passwords to prove a previous game has been finished:
+
+- require_password: an optional flag, pointing out that the scene requires the user to enter a password.
+- show_password: once executed the scene will show a password to the player.
 
 #### Scenarios in scenes
 Every command can act differently based on how *Flags* are set in the current game status. Each command must have a list of such flags and the game engine use them as in a switch case structure.
@@ -73,6 +77,15 @@ Each scenario is defined by these properties:
 - set_flags: key-value pairs defining which flag is set to true or false by using this command. This will allow a certain action on a certain scene to alter the game behaviour in following actions/scenes. Again, use constants please.
 - repeats: an advanced option allowing you to create situations in which the same command must be repeated a number of times in order to work properly. This allows the game designer to envision nice tricks to challenge the player. The repetitions count will be reset every time the player exits the current scene. If not found it defaults to 1.
 - goto: finally, if the command can proceed, it will make the game point to the specified scene. If the value is "null" the scene won't change by using the current command. This can be useful to make the player perform multiple actions in the same scene, linking each one using flags and scenarios.
+
+#### Hiding items in scenes commands
+When an item id is found on the new_items array the prompt for picking it up is automatically shown. This can be prevented by prefixing the id with "@": this will silence the prompt and the item will be auto-added to the inventory. This can be useful in situations where the adding of the item in the inventory is considered implicit or to have fun situations where an object is added to the player's inventory without any warning; it could be something good, or something evil...
+
+#### Scene Passwords
+Passwords are generated (or validated) in the same way a save/load game routine would work. They allow the game engine to preset the game status so that you can share status over multiple cartridges; you could have the player finish the game in "cartridge A" which contains episode 1 and start right where it was left off in "cartridge B" which would contain episode 2.
+
+When a scene contains the "show_password" flag the game engine will generate and show to the user a password for future use.
+Once a scene contains the "require_password" flag the **TDVENTURE** engine will show a prompt for it and it will validate it. If it is valid the game engine will start the game at the predefined start scenes, otherwise the prompt will be brough back up again.
 
 #### Items
 Items are entities which can be acquired and stored in the player inventory during the game. They are subject to almost the same rules and structures of scenes, using flags to define scenarios which can only alter the description of the item, since the behavior of the item is defined in the scene. 
@@ -116,14 +129,14 @@ Otherwise the common scene-defined command routine will act in the following way
 4. Updating the command history for the scene; check with the command history if the repeat quota is met for the command
 5. Printing to the console the text for the current command
 6. Setting flags (in the background) if any flag is specified
-7. If new items are available, the pick prompt is shown to the player, invoking PICK command routines
-8. If goto has value, finally moving to a new scene id, resetting command history and current scene.
+7. If new items are available and (they are not prefixed with @), the pick prompt is shown to the player, invoking PICK command routines
+8. If goto has value, the game will be finally moving to a new scene id, resetting command history and current scene.
 
 If the scene to which goto brings is indicated as one of the final scenes the game ends printing out the text in the scene description.
 
 #### Use items
 
-The USE command prompts a selection of items from the player's inventory. The selected items must match the list of items specified in the USE command of the current scene. The routine is slightly different from the cartridge defined commands one. Flags defined on the item itself will be set accordingly after each use, even if the repeat quota on the scene is not met.
+The USE command prompts a selection of items from the player's inventory. The selected items must match the list of items specified in the USE command of the current scene. The routine is slightly different from the one for cartridge defined commands. Flags defined on the item itself will be set accordingly after each use, even if the repeat quota on the scene is not met.
 
 1. If no USE command exists for the current scene, the game does not alert the player with an error message, so the game is not giving clues wether an item must be used in the scene
 2. Scenario is chosen in the usual way
@@ -150,6 +163,7 @@ In case of rechargeable items, such as a vial of holy water, the game designer c
 - create scenes involving the usage of the vial with two different scenarios based on the full flag
 
 ### Service commands
+- NEW GAME/new game: resets the cartridge back to the start, starting a new game
 - SAVE GAME/save game: Saves the current game status in a folder */save* inside the game folder. The prompt must ask for a name for the savem refusing if the file already exists (using filter functions)
 - LOAD GAME/load game: load a previously saved games. The prompts shows a list of previously saved files, if any; otherwise a message brings up the usual game prompt.
 - EXIT GAME/exit game: prompting a confirmation menu, if "y" exits to the *TDVENTURE* shell
@@ -166,4 +180,4 @@ It is possible to override these values in the *Command Cartridge Settings* so t
 #### Cartridge defined
 Basically any command can be defined by the game scenes. The suggested practice is to define such commands in constants when recurring (such as GO NORTH, GO SOUTH, OPEN DOOR etc) and to keep them as simple as possible. *TDVENTURE* parsing of commands is using a regex to match the words listed in the command in the order the command specifies. The regex used is like: `\bopen\b.*\bdoor\b`.
 
-It is possible to define in the *Common Cartridge Settings* which are the cartride-defined commands you want to make available through the game command autocomplete.
+It is possible to define in the Cartridge property *suggestedCommands* which are the cartride-defined commands you want to make available through the game command autocomplete via an array of command ids.
