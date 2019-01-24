@@ -1,0 +1,32 @@
+{
+  "name": "tdventure",
+  "version": "1.0.0",
+  "description": "CLI game system for text adventures cartridges",
+  "main": "tdventure.js",
+  "dependencies": {
+    "inquirer": "^6.2.1",
+    "inquirer-autocomplete-prompt": "^1.0.1",
+    "vorpal": "^1.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattconfusion/tdventure.git"
+  },
+  "keywords": [
+    "cli",
+    "text",
+    "adventures",
+    "text",
+    "game"
+  ],
+  "author": "Matteo Radice",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattconfusion/tdventure/issues"
+  },
+  "homepage": "https://github.com/mattconfusion/tdventure#readme"
+}
