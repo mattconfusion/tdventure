@@ -18,7 +18,7 @@ ASCII art: outputting art correctly
 Create a game system capable of playing text avdentures written using a single(?) JS file using a data driven approach. The system will be CLI only, text / ascii art driven.
 
 ## Inspiration
-Not really a text game, but an hybrid text/ASCII art precursor to the whole genre of roguelikes: DND by D. M. Lawrence and its DOS port y RO Software (http://www.roguebasin.com/index.php?title=DND && http://www.digital-eel.com/files/dndpage_files/DND.htm).
+Not really a text game, but an hybrid text/ASCII art precursor to the whole genre of roguelikes: DND by D. M. Lawrence and its DOS port by RO Software (http://www.roguebasin.com/index.php?title=DND && http://www.digital-eel.com/files/dndpage_files/DND.htm).
 
 Tech inspiration from https://github.com/arvindr21/cli-adventure-games and many other discussions on forums regarding a data driven approach to console text adventure games.
 
@@ -164,7 +164,7 @@ In case of rechargeable items, such as a vial of holy water, the game designer c
 
 ### Service commands
 - NEW GAME/new game: resets the cartridge back to the start, starting a new game
-- SAVE GAME/save game: Saves the current game status in a folder */save* inside the game folder. The prompt must ask for a name for the savem refusing if the file already exists (using filter functions)
+- SAVE GAME/save game: Saves the current game status in a folder */save* inside the game folder. The prompt must ask for a name for the save refusing if the file already exists (using filter functions)
 - LOAD GAME/load game: load a previously saved games. The prompts shows a list of previously saved files, if any; otherwise a message brings up the usual game prompt.
 - EXIT GAME/exit game: prompting a confirmation menu, if "y" exits to the *TDVENTURE* shell
 
