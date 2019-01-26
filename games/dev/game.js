@@ -22,6 +22,17 @@ const itemsIds = {
     VIAL_OF_HOLY_WATER: 'vialOfHolyWater',
     AUBURN_KEY: 'auburnKey'
 };
+const scenesIds = {
+    ENTRANCE: 'entrance',
+    UNDEAD_GUARDIANS_ENCOUNTER: 'undeadGuardians',
+    CORRIDOR1: 'corridor1',
+    CANDLE_CHAMBER: 'candleChamber',
+    BONES_CHAMBER: 'bonesChamber',
+    CORRIDOR2: 'corridor2',
+    FOUNTAIN_CHAMBER: 'fountainChamber',
+    UNHOLY_CHAMBER: 'unholyChamber',
+    EVIL_INCARNATED: 'evilIncarnated' 
+};
 
 // Flags here
 const Flags = {
@@ -30,7 +41,9 @@ const Flags = {
     [flagsIds.SWORD_BLOODY]: false,
     [flagsIds.SWORD_USED]: false,
     [flagsIds.VIAL_OF_HOLY_WATER_FULL]: false,
-    [flagsIds.EVIL_DISPELLED]: true
+    [flagsIds.EVIL_DISPELLED]: false,
+    [flagsIds.BONES_CHAMBER_DOOR_CLOSED]: true,
+    [flagsIds.CANDLE_CHAMBER_DOOR_CLOSED]: true
 }
 
 // Items here
@@ -66,6 +79,35 @@ const Items = {
 } 
 
 // Scenes here
+const Scenes = {
+    [scenesIds.ENTRANCE]: {
+        name: 'The Wooden Doorway',
+        description: 'A wooden, heavy, double door is before you. It looks ancient.'
+        //this cannot be opened unless the crowbar is used (USE). player cannot turn anywhere
+    },
+    [scenesIds.UNDEAD_GUARDIANS_ENCOUNTER]: {
+        name: 'Beyond the door',
+        description: 'It is very dark, but your noose picks up a vile stench.'
+        // the guardians must be slained with the sword (monster killed flag) by using the sword two times. then you gan go north
+        // going back to the door will kill you
+    },
+    [scenesIds.CORRIDOR1]: {
+        name: 'The dark corridor',
+        description: 'A long and dark corridor stands in front of you.'
+        //looking allows you to discover two doorways to candle and bones chamber. you can open the door and enter 
+    },
+    [scenesIds.CANDLE_CHAMBER]: {
+        name: 'A small chamber',
+        description: 'A very small and damp chamber. A sweet scent of wax fills the air.'
+        //looking you find a pile of objects, including the vial
+    },
+    [scenesIds.BONES_CHAMBER]: {
+        name: 'A large chamber',
+        description: 'A large chamber filled with tables, tools... and what you think may be human bones.'
+        //looking at it it's an embalming room. a hidden switch among the bones deactivates the trap in corridor2
+    }
+
+}
 
 
 // Cartridge
