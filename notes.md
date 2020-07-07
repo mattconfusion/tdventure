@@ -10,8 +10,6 @@
 # DEV NOTES
 
 ## Challenges
-
-USE ROUTINE: use more than one item together
 ASCII art: outputting art correctly
 
 ## Project aim
@@ -43,8 +41,9 @@ The core concepts of data contained in the cartridge files are three:
 - Items, which represent objects (but also abilities etc.) the player can acquire and use in the game
 - Flags to define _scenarios_, which are simple boolean values used to define consequences of player actions.
 - Commons, which contain common game settings, title, credits, start and end points...
+- Stats, representing quantities applied to the player or generally to the system
 
-*Scenes* and *Items* share some common behaviours like the usage of *Flags*, the ability of triggering the output of text and/or ASCII art.
+*Scenes* and *Items* share some common behaviours like the usage of *Flags* ans *Stats*, the ability of triggering the output of text and/or ASCII art.
 
 #### Scenes
 The scene describe a point in the game in which the player is required to use certain commands in order to progress. Other systems define similar objects using the concept of rooms. In **TDVENTURE** the game designer is allowed to give the desired meaning to each scene: it can be a room, a part of a room, but also an encounter, or any other game crossroad.
@@ -76,6 +75,7 @@ Each scenario is defined by these properties:
 - new_items: an array of items available to be picked up. The prompt for picking up items will be shown after the text output for the command. So you can walk trough a doorway and find coins on the floor. Yay!
 - set_flags: key-value pairs defining which flag is set to true or false by using this command. This will allow a certain action on a certain scene to alter the game behaviour in following actions/scenes. Again, use constants please.
 - repeats: an advanced option allowing you to create situations in which the same command must be repeated a number of times in order to work properly. This allows the game designer to envision nice tricks to challenge the player. The repetitions count will be reset every time the player exits the current scene. If not found it defaults to 1.
+- set_stats: key-value pairs defining which stat will be altered when the scenario is played, and how much
 - goto: finally, if the command can proceed, it will make the game point to the specified scene. If the value is "null" the scene won't change by using the current command. This can be useful to make the player perform multiple actions in the same scene, linking each one using flags and scenarios.
 
 #### Hiding items in scenes commands
@@ -97,21 +97,36 @@ The properties of each item are these:
 - use_text: as with scenes, the output text that will be shown when the item is used with the USE command. Refer to the "Output Text" paragraph for the specifications, ASCII art usage, etc.
 - pick_text: same as the previous property, but shown when the item is there to be picked or looked at using the INVENTORY command.
 - use_set_flags: key-value pairs detailing which flags will be altered when using this item
+- use_set_stats: key-value pairs detailing how much a stat must be increased or decreased in using the item
 - pick_set_flags: key-value pairs detailing which flags will be altered when picking this item.
+- pick_set_stats: key-value pairs detailing how much a stat must be increased or decreased in picking the item
+- remove_when_used: boolean value, default to false, that removes the item when used
 
 #### Flags
 Flags are simple boolean values the game designer can use to determine preconditions or changes in the game environment. Their simple nature allows the designer to trigger different reactions to a player action. These must be detailed as properties and setup in the initial game status, defining which flag is set to true or false. A not found flag will be considered false by default when used by the game engine on scenes and items.
+
+#### Stats
+Stats are scalar integer values with a minimum and maximum and starting values. When minimum or maximum are defined and reached the game engine brings the player to a certain scene. Stats are changed in their values in scenarios.
+
+The properties of each stat are:
+- id: the id of the stat
+- name: name of the stat
+- show_stat: boolean value telling the game engine wether to show the stat or not
+- start: starting value of the stat
+- max: maximum value reachable by the stat before going to scene id specified in max_goto
+- min: minimum value reachable by the stat before going to scene id specified in min_goto
+- max_goto: scene id when the stat value is over the defined max value
+- min_goto: scene id when the stat value is under the defined min_value
 
 #### Wrapping it up...
 So the designer could use a scene to describe an encounter with a villain; the magic sword required to kill the villain would be defined as an item, an item required to execute the command "kill". But killing the villain will break the magic sword. Once the "kill" command, which has a repeat quota of 2, is launched 2 times, a couple of flags will be set: one defining that the certain villain is dead, one defining that the sword has been broken. If the sword will be used again with a USE command or when it will be looked at from the INVENTORY command two scenarios using the broken flag will determine what the player can do or see. If the player returns again to the same scene, the flag set when the villain was slain will trigger the description of a dead body in the room instead of a vile bastard waiting for the player.
 
 ### Game routines
-
 Once the game is started, the game object will preload all the initial game status, including start inventory items, start flags, and copying the start scene in the current scene property. If the start scenes are multiple, a randomized choice will start the game in of the them.
 
 Then the common scene routine will begin:
 
-1. The bottom bar will feature the scene name
+1. The bottom bar will feature the scene name and the stats to be shown (if any)
 2. The description of the area will be displayed
 3. Command history for the current scene will be initialized, erasing the previous one
 4. The prompt will wait for commands
@@ -129,6 +144,7 @@ Otherwise the common scene-defined command routine will act in the following way
 4. Updating the command history for the scene; check with the command history if the repeat quota is met for the command
 5. Printing to the console the text for the current command
 6. Setting flags (in the background) if any flag is specified
+7. Adjusting stats value (in the background) if any stat is specified, and interrupting gameplay if min or max are reached
 7. If new items are available and (they are not prefixed with @), the pick prompt is shown to the player, invoking PICK command routines
 8. If goto has value, the game will be finally moving to a new scene id, resetting command history and current scene.
 
@@ -143,17 +159,19 @@ The USE command prompts a selection of items from the player's inventory. The se
 3. Check if the items selected match with the required items in the scenario
 4. Output the use_text text defined in the item itself following the same scenario selection procedure
 5. Set the use_flags defined in item itself
-6. Update the command history and then check for command repeat quota in the scene for the current scenario
-7. if the repeat quota is met, set the flags defined in the scenario of the scene
-8. Output the text defined in the scenario of the scene, set flags, follow goto etc...
+6. Adjusting stats value (in the background) if any stat is specified, and interrupting gameplay if min or max are reached
+7. Update the command history and then check for command repeat quota in the scene for the current scenario
+8. if the repeat quota is met, set the flags defined in the scenario of the scene
+9. Output the text defined in the scenario of the scene, set flags, follow goto etc...
+10. Remove the item if the remove_when_used flag is set to true
 
 #### Pick items
-
 The pickup of items is presented to the player via a prompt whenever a scenario of a certain command of a scene defines the id of new items available. In fact, if new_items array has a valid value:
 
 1. The game engine checks if the item key is not already present in the current game inventory
 2. According to the scenario defined on the item itself, the game will output the text contained in pick_text in the current item
 3. The prompt will be a y/n choice: if the player accepts to pick up the item, pick_flags will be set.
+4. Adjusting stats value if any stat is specified, and interrupting gameplay if min or max are reached
 
 In case of rechargeable items, such as a vial of holy water, the game designer could organize his game like this:
 
