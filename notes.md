@@ -117,6 +117,8 @@ The properties of each stat are:
 - min: minimum value reachable by the stat before going to scene id specified in min_goto
 - max_goto: scene id when the stat value is over the defined max value
 - min_goto: scene id when the stat value is under the defined min_value
+- max_set_flags: array of flags to set when stat value is over the defined max value
+- min_set_flags: array of flags to set when stat value is under the defined min value
 
 #### Wrapping it up...
 So the designer could use a scene to describe an encounter with a villain; the magic sword required to kill the villain would be defined as an item, an item required to execute the command "kill". But killing the villain will break the magic sword. Once the "kill" command, which has a repeat quota of 2, is launched 2 times, a couple of flags will be set: one defining that the certain villain is dead, one defining that the sword has been broken. If the sword will be used again with a USE command or when it will be looked at from the INVENTORY command two scenarios using the broken flag will determine what the player can do or see. If the player returns again to the same scene, the flag set when the villain was slain will trigger the description of a dead body in the room instead of a vile bastard waiting for the player.
@@ -144,14 +146,13 @@ Otherwise the common scene-defined command routine will act in the following way
 4. Updating the command history for the scene; check with the command history if the repeat quota is met for the command
 5. Printing to the console the text for the current command
 6. Setting flags (in the background) if any flag is specified
-7. Adjusting stats value (in the background) if any stat is specified, and interrupting gameplay if min or max are reached
+7. Adjusting stats value (in the background) if any stat is specified, and interrupting gameplay if min or max are reached and goto options are set, or setting flags accordingly
 7. If new items are available and (they are not prefixed with @), the pick prompt is shown to the player, invoking PICK command routines
 8. If goto has value, the game will be finally moving to a new scene id, resetting command history and current scene.
 
-If the scene to which goto brings is indicated as one of the final scenes the game ends printing out the text in the scene description.
+If the scene to which goto brings is indicated as one of the final scenes the game ends printing out the text in the scene description. The credits will follow
 
 #### Use items
-
 The USE command prompts a selection of items from the player's inventory. The selected items must match the list of items specified in the USE command of the current scene. The routine is slightly different from the one for cartridge defined commands. Flags defined on the item itself will be set accordingly after each use, even if the repeat quota on the scene is not met.
 
 1. If no USE command exists for the current scene, the game does not alert the player with an error message, so the game is not giving clues wether an item must be used in the scene
