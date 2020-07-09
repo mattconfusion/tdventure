@@ -103,8 +103,15 @@ const Scenes = {
     },
     [scenesIds.BONES_CHAMBER]: {
         name: 'A large chamber',
-        description: 'A large chamber filled with tables, tools... and what you think may be human bones.'
+        description: 'A large chamber filled with tables, tools... and what you think may be human bones.',
         //looking at it it's an embalming room. a hidden switch among the bones deactivates the trap in corridor2
+        commands: {
+            [cmds.GO_EAST]: {
+                default_scenario: {
+                    // ...
+                }
+            }
+        }
     }
 
 }
@@ -116,12 +123,12 @@ const Cartridge = {
     version: '0.1',
     description: ['A development cartridge file'],
     credits: ['Matteo Radice as The Main Dev'],
-    startItems: [], //list of items ids
-    startFlags: Flags, //dictionary of flag id and value of the flag at the start of the game
-    startScenes: [], //list of the start scenes of the game (random choice if more than one)
-    endScenes: [], // list of scenes id where the game ends, no matter in which way
-    suggestedCommands: [cmds.GO_NORTH, cmds.GO_SOUTH, cmds.GO_EAST, cmds.GO_WEST], // list of commands that the game will try to autocomplete
-    inventoryCommandString: null, // you can overwrite these special commands
-    useCommandString: null, // by puttig here null you are not overwriting them
-    commonMessages: {} // dictionary of common game messages to be overriden
+    start_items: [], //list of items ids
+    start_flags: Flags, //dictionary of flag id and value of the flag at the start of the game
+    start_scenes: [], //list of the start scenes of the game (random choice if more than one)
+    end_scenes: [], // list of scenes id where the game ends, no matter in which way
+    suggested_commands: [cmds.GO_NORTH, cmds.GO_SOUTH, cmds.GO_EAST, cmds.GO_WEST], // list of commands that the game will try to autocomplete
+    inventory_command_string: null, // you can overwrite these special commands
+    use_command_string: null, // by puttig here null you are not overwriting them
+    common_messages: {} // dictionary of common game messages to be overriden
 };

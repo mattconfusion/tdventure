@@ -112,7 +112,6 @@ The properties of each stat are:
 - id: the id of the stat
 - name: name of the stat
 - show_stat: boolean value telling the game engine wether to show the stat or not
-- start: starting value of the stat
 - max: maximum value reachable by the stat before going to scene id specified in max_goto
 - min: minimum value reachable by the stat before going to scene id specified in min_goto
 - max_goto: scene id when the stat value is over the defined max value
@@ -124,7 +123,7 @@ The properties of each stat are:
 So the designer could use a scene to describe an encounter with a villain; the magic sword required to kill the villain would be defined as an item, an item required to execute the command "kill". But killing the villain will break the magic sword. Once the "kill" command, which has a repeat quota of 2, is launched 2 times, a couple of flags will be set: one defining that the certain villain is dead, one defining that the sword has been broken. If the sword will be used again with a USE command or when it will be looked at from the INVENTORY command two scenarios using the broken flag will determine what the player can do or see. If the player returns again to the same scene, the flag set when the villain was slain will trigger the description of a dead body in the room instead of a vile bastard waiting for the player.
 
 ### Game routines
-Once the game is started, the game object will preload all the initial game status, including start inventory items, start flags, and copying the start scene in the current scene property. If the start scenes are multiple, a randomized choice will start the game in of the them.
+Once the game is started, the game object will preload all the initial game status, including start inventory items, start flags, start stats and copying the start scene in the current scene property. If the start scenes are multiple, a randomized choice will start the game in of the them.
 
 Then the common scene routine will begin:
 
