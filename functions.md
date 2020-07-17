@@ -9,6 +9,8 @@
 
 # FUNCTIONS IDEAS
 
+The macro classes needed are *TUI* (text UI, it contains method to display prompts and text lines), *GameStatus* (it keeps track of player actions such as command history, stats, items and is ready to save game), *Engine* (which is the actual game Engine), *Inventory* (a minor class with all the inner works of inventory and items, like a sub-engine for game)
+
 ## Utils
 1. random_choice(array of choices): value of the choice picked
 
@@ -28,15 +30,16 @@
 13. TUI.renderStatsBar(array Stat objects)
 14. TUI.printDescription(array strings)
 15. TUI.promptForCmd(array<string> suggestedCmds): string inputFromPlayer
-16. Engine.evaluateCmd(array<string> availableCmds): string chosenCmd | 
+16. Engine.evaluateCmd(array<string> availableCmds): string chosenCmd 
 17. TUI.warnInvalidCmd()
 18. Engine.playScenario(string sceneId, string cmdId, string scenarioId)
-19. GameStatus.checkRequiredItems(array itemsId)
+19. Inventory.checkRequiredItems(array itemsId)
 20. GameStatus.setCurrentItems(array itemsId)
 21. GameStatus.alterStat(string statid, int deltaValue)
 22. GameStatus.checkStatCondition(string statId, int currentAbsoluteValue)
 23. TUI.warnRequirementsNotMet()
 24. TUI.print(array strings)
+25. Inventory.pickItem(string ItemId) 
 
 ### Engine.gameStart
 1. Check the Cartridge.start_scenes array.
@@ -69,6 +72,20 @@
 3. Set stats for the scenario
 4. Display text
 5. Render bottom bar for updated stats that must be shown
-6. 
+6. If new items available, invoke either pick items function or silently add items to inventory
 
+### Inventory.pickItem
+1. Prompt text
+2. Invoke add item
 
+### Inventory.addItem
+1. Add item to inventory array
+2. Update the game stats with GameStatus.setCurrentItems
+
+### Inventory.useItem
+
+### Inventory.lookItem
+
+### Inventory.removeItem
+
+### Inventory.checkRequiredItems
